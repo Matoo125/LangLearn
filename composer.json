@@ -1,0 +1,11 @@
+{
+    "require": {
+        "m4/m4mvc": "v0.3.0.2",
+        "filp/whoops": "^2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "m4\\wordMaster\\": "backend/"
+        }
+    }
+}
