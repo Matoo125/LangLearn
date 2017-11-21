@@ -6,8 +6,8 @@ use m4\m4mvc\core\Model;
 
 class Definition extends Model
 {
-  protected static $table = 'definitions d';
-  protected static $table2 = 'words2definitions w2d';
+  protected static $table = 'definitions';
+  protected static $table2 = 'words2definitions';
 
   public function find ($filters)
   {
@@ -28,8 +28,8 @@ class Definition extends Model
   public function list ($filters = null)
   {
     $q = $this->query->select()
-                     ->from(static::$table);
-    $q->join('left', self::$table2, ' w2d.definition_id = d.id');
+                     ->from(static::$table . ' d');
+    $q->join('left', self::$table2 . ' w2d', ' w2d.definition_id = d.id');
     $q->where(array_keys($filters));
     return $this->fetchAll($q->build(), $filters);
   }

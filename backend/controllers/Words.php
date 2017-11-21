@@ -27,10 +27,14 @@ class Words extends Controller
 
   public function find ()
   {
-    $this->data['word'] = $this->model->find([
+    $word = $this->model->find([
       'lang' => $_GET['lang'],
       'word' => $_GET['word']
     ]);
+
+    $word ?
+    Response::success('Word has been found', ['word' => $word]) :
+    Response::error('Word not found');
   }
 
   public function add ()

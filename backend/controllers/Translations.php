@@ -13,7 +13,7 @@ class Translations extends Controller
 
   public function __construct ()
   {
-    $this->model = $this->getModel('Words2Translation');
+    $this->model = $this->getModel('Translation');
   }
 
   public function index ()
@@ -23,6 +23,8 @@ class Translations extends Controller
 
   public function list ()
   {
+    $data = Request::select('word_id');
+    $this->data['translations'] = $this->model->list($data);
   }
 
   public function find ()
@@ -33,11 +35,8 @@ class Translations extends Controller
   public function add ()
   {
     Request::forceMethod('post');
-    Request::required('word_1_id', 'word_2_id');
-    $data = Request::select('word_1_id', 'word_2_id');
-
-    $duplicate = $this->model->find($data);
-    if ($duplicate) Response::error('this translation already exists');
+    Request::required('word_id', 'lang', 'translation');
+    $data = Request::select('word_id', 'lang', 'translation');
 
     $added = $this->model->add($data);
     $added ? 

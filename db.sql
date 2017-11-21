@@ -86,3 +86,10 @@ left join sentences s on s.id = w2s.sentence_id
 left join definitions d on d.id = w2d.definition_id
 left join words t on w2t.word_2_id = t.id or w2t2.word_1_id = t.id
 group by w.id
+
+-- translations view
+create view translations as
+select t.*, w.id as word_id from words w
+left join words2translations w2t on w2t.word_1_id = w.id or w2t.word_2_id = w.id
+left join words t on t.id = case when w2t.word_1_id = w.id then w2t.word_2_id else w2t.word_1_id end
+where t.id is not null 
