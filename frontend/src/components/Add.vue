@@ -24,7 +24,7 @@
         <a class="button is-success" @click="checkDuplicates()">Check</a>
       </div>
 
-      <div class="column is-4" v-show="extraFields">
+      <div class="column is-4" v-show="word">
 
         <div class="field">
           <label class="label">Translation</label>
@@ -53,7 +53,44 @@
       </div>
 
       <div class="column is-4">
-        
+        <div class="card" v-if="sentences">
+          <div class="card-header">
+            <p class="card-header-title">
+              Translations
+            </p>
+          </div>
+          <div class="card-content">
+            <p v-for="translation in translations">
+              {{ translation.word }}
+            </p>
+          </div>
+        </div>
+
+        <div class="card" v-if="sentences">
+          <div class="card-header">
+            <p class="card-header-title">
+              Example Sentences
+            </p>
+          </div>
+          <div class="card-content">
+            <p v-for="sentence in sentences">
+              {{ sentence.sentence }}
+            </p>
+          </div>
+        </div>
+
+        <div class="card"  v-if="definitions">
+          <div class="card-header">
+            <p class="card-header-title">
+              Defitions
+            </p>
+          </div>
+          <div class="card-content">
+            <p v-for="definition in definitions">
+              {{ definition.definition }}
+            </p>
+          </div>
+        </div>
       </div>
 
     </div>  
@@ -68,7 +105,9 @@
 </template>
 
 <script>
-import axios from 'axios'
+import {API} from '@/tools/Api.js'
+import { mapMutations, mapState } from 'vuex'
+
 export default {
   name: 'Add',
   data () {
@@ -78,64 +117,67 @@ export default {
         translation: '',
         defitinition: '',
         sentence: ''
-      },
-      word: null,
-      defitinitions: null,
-      sentences: null,
-      translations: null,
-      extraFields: false
+      }
     }
   },
+  computed: mapState([
+    'word', 'translations', 'sentences', 'definitions'
+  ]),
   methods: {
+    ...mapMutations([
+      'set_word'
+    ]),
     update () {
       this.addDefinition()
       this.addSentence()
+      this.addTranslation()
+    },
+    addTranslation () {
+      var data = new FormData()
+      data.append('word_id', this.word.id)
+      data.append('lang', '2')
+      data.append('translation', this.form.translation)
+      API.post('translations/add', data)
+      .then(r => { console.log(r) })
+      .catch(e => { console.log(e) })
     },
     addDefinition () {
       var data = new FormData()
       data.append('definition', this.form.definition)
-      data.append('word_id', this.word)
-      axios.post(process.env.API + 'definitions/add', data)
+      data.append('word_id', this.word.id)
+      API.post('definitions/add', data)
       .then(r => { console.log(r) })
       .catch(e => { console.log(e) })
     },
     addSentence () {
       var data = new FormData()
       data.append('sentence', this.form.sentence)
-      data.append('word_id', this.word)
-      axios.post(process.env.API + 'sentences/add', data)
+      data.append('word_id', this.word.id)
+      API.post('sentences/add', data)
       .then(r => { console.log(r) })
       .catch(e => { console.log(e) })
     },
-    addTranslation () {},
     checkDuplicates () {
-      axios.get(process.env.API + 'words/find', {
-        params: {
-          lang: '1',
-          word: this.form.word
-        }
-      }).then(r => {
-        console.log(r)
-        if (!r.data.word) {
-          this.addWord()
-        } else {
-          alert('this word already exists')
-        }
-      }).catch(e => { console.log(e) })
-    },
-    addWord () {
-      var data = new FormData()
-      data.append('lang', 1)
-      data.append('word', this.form.word)
-      axios.post(process.env.API + 'words/add', data)
+      var data = {
+        lang: '1',
+        word: this.form.word
+      }
+      this.$store.dispatch('find_word', data)
       .then(r => {
-        console.log(r)
-        this.word = r.data.id
-        this.extraFields = true
-      }).catch(e => { console.log(e) })
+        alert('this word already exists')
+        this.$store.dispatch('load_sentences')
+        this.$store.dispatch('load_definitions')
+        this.$store.dispatch('load_translations')
+      })
+      .catch(e => {
+        this.addWord(data)
+      })
+    },
+    addWord (data) {
+      this.$store.dispatch('add_word', data)
     },
     loadTranslations () {
-      // axios.get(process.env.API + '')
+      // API.get('')
     },
     loadDefinitions () {
 

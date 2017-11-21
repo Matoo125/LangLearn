@@ -15,7 +15,7 @@
 
 <script>
 // import axios from 'axios'
-import axios from '@/tools/Api.js'
+import {API} from '@/tools/Api.js'
 export default {
   name: 'List',
   data () {
@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     loadWords () {
-      axios.get('words/list')
+      API.get('words/list')
       .then(r => {
         console.log(r)
         this.words = r.data.words
