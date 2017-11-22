@@ -13,7 +13,7 @@
   </router-link>
 
   <router-link :to="{ name: 'Add' }" class="navbar-item">
-    Add
+    Manage
   </router-link>
 
   </div>

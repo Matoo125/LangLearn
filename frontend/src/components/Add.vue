@@ -21,6 +21,10 @@
             <input class="input" type="text" v-model="form.word" placeholder="Enter the Term">
           </div>
         </div>
+        <div class="notification is-primary" v-if="note.show">
+          <button class="delete"></button>
+          {{ note.text }}
+        </div>
         <a class="button is-success" @click="checkDuplicates()">Check</a>
       </div>
 
@@ -53,7 +57,7 @@
       </div>
 
       <div class="column is-4">
-        <div class="card" v-if="sentences">
+        <div class="card" v-if="translations">
           <div class="card-header">
             <p class="card-header-title">
               Translations
@@ -112,6 +116,10 @@ export default {
   name: 'Add',
   data () {
     return {
+      note: {
+        show: false,
+        text: 'Word has been found'
+      },
       form: {
         word: '',
         translation: '',
@@ -138,7 +146,10 @@ export default {
       data.append('lang', '2')
       data.append('translation', this.form.translation)
       API.post('translations/add', data)
-      .then(r => { console.log(r) })
+      .then(r => {
+        console.log(r)
+        this.$store.dispatch('load_translations')
+      })
       .catch(e => { console.log(e) })
     },
     addDefinition () {
@@ -146,7 +157,10 @@ export default {
       data.append('definition', this.form.definition)
       data.append('word_id', this.word.id)
       API.post('definitions/add', data)
-      .then(r => { console.log(r) })
+      .then(r => {
+        console.log(r)
+        this.$store.dispatch('load_definitions')
+      })
       .catch(e => { console.log(e) })
     },
     addSentence () {
@@ -154,7 +168,10 @@ export default {
       data.append('sentence', this.form.sentence)
       data.append('word_id', this.word.id)
       API.post('sentences/add', data)
-      .then(r => { console.log(r) })
+      .then(r => {
+        console.log(r)
+        this.$store.dispatch('load_sentences')
+      })
       .catch(e => { console.log(e) })
     },
     checkDuplicates () {
@@ -164,25 +181,20 @@ export default {
       }
       this.$store.dispatch('find_word', data)
       .then(r => {
-        alert('this word already exists')
+        this.note.show = true
+        this.note.text = 'Word has been found'
         this.$store.dispatch('load_sentences')
         this.$store.dispatch('load_definitions')
         this.$store.dispatch('load_translations')
       })
       .catch(e => {
+        this.note.show = true
+        this.note.text = 'Word has been added'
         this.addWord(data)
       })
     },
     addWord (data) {
       this.$store.dispatch('add_word', data)
-    },
-    loadTranslations () {
-      // API.get('')
-    },
-    loadDefinitions () {
-
-    },
-    loadSentences () {
     }
   }
 }

@@ -25,6 +25,13 @@ class Words extends Controller
     $this->data['words'] = $this->model->list();
   }
 
+  public function learningList ()
+  {
+    Request::required('w', 't'); // id of learning lang and known lang
+    $data = Request::select('w', 't');
+    $this->data['learningList'] = $this->model->learningList($data);
+  }
+
   public function find ()
   {
     $word = $this->model->find([

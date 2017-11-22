@@ -1,16 +1,42 @@
 <template>
-<section class="hero">
-  <div class="hero-body">
-    <p class="title">
-      List
-    </p>
 
-    <ul>
-      <li v-for="word in words">{{ word.word }}</li>
-    </ul>
+<div>
+  <section class="hero is-success">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">
+          List
+        </h1>
+      </div>
+    </div>
+  </section>
 
+  <div class="container">
+    <div class="column is-8">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>id</th>
+            <th>word</th>
+            <th>lang</th>
+            <th>level</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="word in words">
+            <td>{{ word.id }}</td>
+            <td>{{ word.word }}</td>
+            <td>{{ word.lang }}</td>
+            <td>{{ word.difficulty }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
   </div>
-</section>
+
+</div>
+
 </template>
 
 <script>

@@ -18,7 +18,7 @@ class Translation extends Model
     ]);
 
     if ($exists) { // if not add word to db
-      $translation_id = $exists['id']
+      $translation_id = $exists['id'];
     }
     else {
       $translation_id = $word->add([
@@ -29,13 +29,12 @@ class Translation extends Model
       ]);
     }
 
-    print_r($exists);die;
     // create connection between words
     $q = $this->query->insert('word_1_id', 'word_2_id')
                      ->into('words2translations')
                      ->build();
     $bind = [
-      'word_1_id' => $data['word_id']
+      'word_1_id' => $data['word_id'],
       'word_2_id' => $translation_id
     ];
     
