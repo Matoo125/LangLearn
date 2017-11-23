@@ -1,51 +1,66 @@
 <template>
-<section class="hero">
-  <div class="hero-body">
-    <p class="title">
-      Learn
-    </p>
+<div>
 
-    <div class="columns">
-      <div class="column is-4" v-if="active">
-        <div class="field">
-          <label class="label is-large">{{ active.translation }}</label>
-          <div class="control has-icons-left has-icons-right">
-            <input class="input is-large" placeholder="enter translation">
-            <span class="icon is-small is-left">
-              <i class="fa fa-envelope"></i>
-            </span>
-            <span class="icon is-small is-right">
-              <i class="fa fa-check"></i>
-            </span>
+  <v-hero hColor="is-primary">
+    Learn
+  </v-hero>
+
+  <div class="container">
+    <section class="section">
+      <div class="columns">
+        <div class="column is-4" v-if="active">
+          <div class="field">
+            <label class="label is-large">
+              {{ active.translation }}
+            </label>
+            <div class="control">
+              <input v-model="answer" 
+                     class="input is-large" 
+                     placeholder="enter translation">
+            </div>
           </div>
-        </div>
 
-        <div class="field">
-          <p class="control">
-            <button class="button is-info">
-              check
-            </button>
-          </p>
-      </div>
-    </div>
-    </div>
+          <div class="field is-grouped">
+            <v-button b-type="is-info" 
+                      :b-click="checkAnswer">check</v-button>
 
+            <v-button b-type="is-secondary" 
+                      :b-click="showAnswer">I don't know</v-button>
+          </div>
+          
+        </div> <!-- end column -->
 
-  </div>
+        <v-note class="column is-4" 
+                nColor="is-info" 
+                v-if="note.show">{{ note.text }}</v-note>
 
-</section>
+      </div> <!-- end columns -->
+    </section>
+  </div> <!-- end container -->
+
+</div>
 </template>
 
 <script>
 import {API} from '@/tools/Api.js'
+import { Button, Hero, Note } from '@/ui'
 
 export default {
   name: 'Learn',
+  components: {
+    'v-button': Button,
+    'v-hero': Hero,
+    'v-note': Note
+  },
   data () {
     return {
       toLearn: null,
       active: null,
-      answer: null
+      answer: null,
+      note: {
+        show: false,
+        text: ''
+      }
     }
   },
   mounted: function () {
@@ -55,8 +70,8 @@ export default {
     loadWords () {
       API.get('words/learningList', {
         params: {
-          w: 1,
-          t: 2
+          w: this.$store.state.config.knownLang,
+          t: this.$store.state.config.learnLang
         }
       })
       .then(r => {
@@ -67,9 +82,20 @@ export default {
       .catch(e => { console.log(e) })
     },
     pickWord () {
-      this.active = this.toLearn[Math.floor(Math.random() * this.toLearn.length)]
+      let items = this.toLearn.length
+      this.active = this.toLearn[Math.floor(Math.random() * items)]
     },
     checkAnswer () {
+      this.note.show = true
+      if (this.answer === this.active.word) {
+        this.note.text = 'correct'
+        console.log('correct')
+      } else {
+        this.note.text = 'incorrect'
+        console.log('incorrect')
+      }
+    },
+    showAnswer () {
 
     }
   }

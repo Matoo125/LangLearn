@@ -8,7 +8,11 @@ const state = {
   word: null,
   translations: {},
   sentences: {},
-  definitions: {}
+  definitions: {},
+  config: {
+    knownLang: 1,
+    learnLang: 2
+  }
 }
 
 const mutations = {

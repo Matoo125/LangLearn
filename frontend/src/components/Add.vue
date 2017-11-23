@@ -1,108 +1,67 @@
 <template>
 
 <div>
-  <section class="hero is-primary">
-    <div class="hero-body">
-      <div class="container">
-        <h1 class="title">
-          Add new Word
-        </h1>
-      </div>
-    </div>
-  </section>
+  <v-hero hColor="is-primary">Manage words</v-hero>
 <br>
   <div class="container">
     
     <div class="columns">
       <div class="column is-4">
-        <div class="field">
-          <label class="label">Word</label>
-          <div class="control">
-            <input class="input" type="text" v-model="form.word" placeholder="Enter the Term">
-          </div>
-        </div>
-        <div class="notification is-primary" v-if="note.show">
-          <button class="delete"></button>
+        
+        <v-input iPlaceholder="Enter a Term"
+                 v-model="form.word">Word</v-input>
+
+        <v-note n-color="is-primary" v-if="note.show">
           {{ note.text }}
-        </div>
-        <a class="button is-success" @click="checkDuplicates()">Check</a>
+        </v-note>
+
+        <v-button b-type="is-success"
+                  :b-click="checkDuplicates">Check</v-button>
       </div>
 
       <div class="column is-4" v-show="word">
-
-        <div class="field">
-          <label class="label">Translation</label>
-          <div class="control">
-            <input class="input" type="text" v-model="form.translation" placeholder="Translation">
-          </div>
-        </div>
-
-
-        <div class="field">
-          <label class="label">Definition</label>
-          <div class="control">
-            <input class="input" type="text" v-model="form.definition" placeholder="Definition">
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="label">Example Sentense</label>
-          <div class="control">
-            <input class="input" type="text" v-model="form.sentence" placeholder="Sentense">
-          </div>
-        </div>
-
-        <a class="button is-success" @click="update()">Update</a>
-
+        <v-input iPlaceholder="Translation"
+                 v-model="form.translation">Add a Translation</v-input>
+        <v-input iPlaceholder="Definition"
+                 v-model="form.definition">Add a Definition</v-input>
+        <v-input iPlaceholder="Sentence"
+                 v-model="form.sentence">Add a Sentence</v-input>
+        <v-button b-type="is-success"
+                  :b-click="update">Update</v-button>
       </div>
 
       <div class="column is-4">
-        <div class="card" v-if="translations">
-          <div class="card-header">
-            <p class="card-header-title">
-              Translations
-            </p>
-          </div>
-          <div class="card-content">
+
+        <v-card v-if="translations">
+          <div slot="title">Translations</div>
+          <div slot="content">
             <p v-for="translation in translations">
               {{ translation.word }}
             </p>
           </div>
-        </div>
+        </v-card> <!-- end card translations -->
 
-        <div class="card" v-if="sentences">
-          <div class="card-header">
-            <p class="card-header-title">
-              Example Sentences
-            </p>
-          </div>
-          <div class="card-content">
+        <v-card v-if="sentences">
+          <div slot="title">Sentences</div>
+          <div slot="content">
             <p v-for="sentence in sentences">
               {{ sentence.sentence }}
             </p>
           </div>
-        </div>
+        </v-card> <!-- end card sentences -->
 
-        <div class="card"  v-if="definitions">
-          <div class="card-header">
-            <p class="card-header-title">
-              Defitions
-            </p>
-          </div>
-          <div class="card-content">
+        <v-card v-if="definitions">
+          <div slot="title">Definitions</div>
+          <div slot="content">
             <p v-for="definition in definitions">
               {{ definition.definition }}
             </p>
           </div>
-        </div>
-      </div>
+        </v-card> <!-- end card definitions -->
 
-    </div>  
-
-
-
-  </div>
-
+      </div> <!-- end column -->
+    </div>  <!-- end columns -->
+  </div> <!-- end container -->
 </div>
 
 
@@ -111,9 +70,17 @@
 <script>
 import {API} from '@/tools/Api.js'
 import { mapMutations, mapState } from 'vuex'
+import { Button, Hero, Note, Card, Input } from '@/ui'
 
 export default {
   name: 'Add',
+  components: {
+    'v-button': Button,
+    'v-hero': Hero,
+    'v-note': Note,
+    'v-card': Card,
+    'v-input': Input
+  },
   data () {
     return {
       note: {
@@ -143,7 +110,7 @@ export default {
     addTranslation () {
       var data = new FormData()
       data.append('word_id', this.word.id)
-      data.append('lang', '2')
+      data.append('lang', this.$store.state.config.knownLang)
       data.append('translation', this.form.translation)
       API.post('translations/add', data)
       .then(r => {
@@ -176,7 +143,7 @@ export default {
     },
     checkDuplicates () {
       var data = {
-        lang: '1',
+        lang: this.$store.state.config.learnLang,
         word: this.form.word
       }
       this.$store.dispatch('find_word', data)

@@ -1,15 +1,7 @@
 <template>
 
 <div>
-  <section class="hero is-success">
-    <div class="hero-body">
-      <div class="container">
-        <h1 class="title">
-          List
-        </h1>
-      </div>
-    </div>
-  </section>
+  <v-hero hColor="is-dark">All words</v-hero>
 
   <div class="container">
     <div class="column is-8">
@@ -42,8 +34,13 @@
 <script>
 // import axios from 'axios'
 import {API} from '@/tools/Api.js'
+import { Hero } from '@/ui'
+
 export default {
   name: 'List',
+  components: {
+    'v-hero': Hero
+  },
   data () {
     return {
       words: null
