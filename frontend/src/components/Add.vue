@@ -2,66 +2,60 @@
 
 <div>
   <v-hero hColor="is-primary">Manage words</v-hero>
-<br>
-  <div class="container">
-    
-    <div class="columns">
-      <div class="column is-4">
-        
-        <v-input iPlaceholder="Enter a Term"
-                 v-model="form.word">Word</v-input>
 
-        <v-note n-color="is-primary" v-if="note.show">
-          {{ note.text }}
-        </v-note>
+  <v-wrap>
+    <div class="column is-4">
+      <v-input iPlaceholder="Enter a Term"
+               v-model="form.word">Word</v-input>
+      <v-note n-color="is-primary" v-if="note.show">
+        {{ note.text }}
+      </v-note>
+      <v-button b-type="is-success"
+                :b-click="checkDuplicates">Check</v-button>
+    </div> <!-- end of column -->
 
-        <v-button b-type="is-success"
-                  :b-click="checkDuplicates">Check</v-button>
-      </div>
+    <div class="column is-4" v-show="word">
+      <v-input iPlaceholder="Translation"
+               v-model="form.translation">Add a Translation</v-input>
+      <v-input iPlaceholder="Definition"
+               v-model="form.definition">Add a Definition</v-input>
+      <v-input iPlaceholder="Sentence"
+               v-model="form.sentence">Add a Sentence</v-input>
+      <v-button b-type="is-success"
+                :b-click="update">Update</v-button>
+    </div> <!-- end of column -->
 
-      <div class="column is-4" v-show="word">
-        <v-input iPlaceholder="Translation"
-                 v-model="form.translation">Add a Translation</v-input>
-        <v-input iPlaceholder="Definition"
-                 v-model="form.definition">Add a Definition</v-input>
-        <v-input iPlaceholder="Sentence"
-                 v-model="form.sentence">Add a Sentence</v-input>
-        <v-button b-type="is-success"
-                  :b-click="update">Update</v-button>
-      </div>
+    <div class="column is-4">
 
-      <div class="column is-4">
+      <v-card v-if="translations">
+        <div slot="title">Translations</div>
+        <div slot="content">
+          <p v-for="translation in translations">
+            {{ translation.word }}
+          </p>
+        </div>
+      </v-card> <!-- end card translations -->
 
-        <v-card v-if="translations">
-          <div slot="title">Translations</div>
-          <div slot="content">
-            <p v-for="translation in translations">
-              {{ translation.word }}
-            </p>
-          </div>
-        </v-card> <!-- end card translations -->
+      <v-card v-if="sentences">
+        <div slot="title">Sentences</div>
+        <div slot="content">
+          <p v-for="sentence in sentences">
+            {{ sentence.sentence }}
+          </p>
+        </div>
+      </v-card> <!-- end card sentences -->
 
-        <v-card v-if="sentences">
-          <div slot="title">Sentences</div>
-          <div slot="content">
-            <p v-for="sentence in sentences">
-              {{ sentence.sentence }}
-            </p>
-          </div>
-        </v-card> <!-- end card sentences -->
+      <v-card v-if="definitions">
+        <div slot="title">Definitions</div>
+        <div slot="content">
+          <p v-for="definition in definitions">
+            {{ definition.definition }}
+          </p>
+        </div>
+      </v-card> <!-- end card definitions -->
 
-        <v-card v-if="definitions">
-          <div slot="title">Definitions</div>
-          <div slot="content">
-            <p v-for="definition in definitions">
-              {{ definition.definition }}
-            </p>
-          </div>
-        </v-card> <!-- end card definitions -->
-
-      </div> <!-- end column -->
-    </div>  <!-- end columns -->
-  </div> <!-- end container -->
+    </div> <!-- end column -->
+  </v-wrap>
 </div>
 
 
@@ -70,7 +64,7 @@
 <script>
 import {API} from '@/tools/Api.js'
 import { mapMutations, mapState } from 'vuex'
-import { Button, Hero, Note, Card, Input } from '@/ui'
+import { Button, Hero, Note, Card, Input, Wrap } from '@/ui'
 
 export default {
   name: 'Add',
@@ -79,7 +73,8 @@ export default {
     'v-hero': Hero,
     'v-note': Note,
     'v-card': Card,
-    'v-input': Input
+    'v-input': Input,
+    'v-wrap': Wrap
   },
   data () {
     return {

@@ -5,52 +5,44 @@
     Learn
   </v-hero>
 
-  <div class="container">
-    <section class="section">
-      <div class="columns">
-        <div class="column is-4" v-if="active">
-          <div class="field">
-            <label class="label is-large">
-              {{ active.translation }}
-            </label>
-            <div class="control">
-              <input v-model="answer" 
-                     class="input is-large" 
-                     placeholder="enter translation">
-            </div>
-          </div>
+  <v-wrap>
+    <div class="column is-4" v-if="active">
+      <v-input iPlaceholder="Enter a Translation"
+                v-model="answer">{{ active.translation }}</v-input>
 
-          <div class="field is-grouped">
-            <v-button b-type="is-info" 
-                      :b-click="checkAnswer">check</v-button>
+      <div class="field is-grouped">
+        <v-button b-type="is-info"
+                  :b-click="checkAnswer">Check</v-button>
 
-            <v-button b-type="is-secondary" 
-                      :b-click="showAnswer">I don't know</v-button>
-          </div>
-          
-        </div> <!-- end column -->
+        <v-button b-type="is-secondary"
+                  :b-click="showAnswer">I don't know</v-button>
 
-        <v-note class="column is-4" 
-                nColor="is-info" 
-                v-if="note.show">{{ note.text }}</v-note>
+        <v-button b-type="is-dark"
+                  :b-click="pickWord">Next</v-button>
+      </div>
 
-      </div> <!-- end columns -->
-    </section>
-  </div> <!-- end container -->
+    </div> <!-- end column -->
+
+    <v-note class="column is-4"
+            nColor="is-info"
+            v-if="note.show">{{ note.text }}</v-note>
+  </v-wrap>
 
 </div>
 </template>
 
 <script>
 import {API} from '@/tools/Api.js'
-import { Button, Hero, Note } from '@/ui'
+import { Button, Hero, Note, Input, Wrap } from '@/ui'
 
 export default {
   name: 'Learn',
   components: {
     'v-button': Button,
     'v-hero': Hero,
-    'v-note': Note
+    'v-note': Note,
+    'v-input': Input,
+    'v-wrap': Wrap
   },
   data () {
     return {
@@ -96,7 +88,8 @@ export default {
       }
     },
     showAnswer () {
-
+      this.note.show = true
+      this.note.text = this.active.word
     }
   }
 }

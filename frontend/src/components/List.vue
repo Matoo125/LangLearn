@@ -3,7 +3,7 @@
 <div>
   <v-hero hColor="is-dark">All words</v-hero>
 
-  <div class="container">
+  <v-wrap>
     <div class="column is-8">
       <table class="table">
         <thead>
@@ -23,9 +23,8 @@
           </tr>
         </tbody>
       </table>
-
     </div>
-  </div>
+  </v-wrap>
 
 </div>
 
@@ -34,12 +33,13 @@
 <script>
 // import axios from 'axios'
 import {API} from '@/tools/Api.js'
-import { Hero } from '@/ui'
+import { Hero, Wrap } from '@/ui'
 
 export default {
   name: 'List',
   components: {
-    'v-hero': Hero
+    'v-hero': Hero,
+    'v-wrap': Wrap
   },
   data () {
     return {

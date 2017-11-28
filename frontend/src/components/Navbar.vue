@@ -16,6 +16,10 @@
     Manage
   </router-link>
 
+  <router-link :to="{ name: 'Config' }" class="navbar-item">
+    Config
+  </router-link>
+
   </div>
 </nav>
 </template>

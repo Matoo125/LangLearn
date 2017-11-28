@@ -4,6 +4,7 @@ import Index from '@/components/Index'
 import Learn from '@/components/Learn'
 import List from '@/components/List'
 import Add from '@/components/Add'
+import Config from '@/components/Config'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
       path: '/add',
       name: 'Add',
       component: Add
+    },
+    {
+      path: '/config',
+      name: 'Config',
+      component: Config
     }
   ]
 })

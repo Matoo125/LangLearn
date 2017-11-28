@@ -1,10 +1,10 @@
 <template>
 <div class="field">
   <label class="label">
-    <slot name="label"></slot>
+    <slot></slot>
   </label>
   <div class="control">
-    <input type="text" 
+    <input type="text"
            class="input"
            :placeholder="iPlaceholder"
            v-model="iModel">
